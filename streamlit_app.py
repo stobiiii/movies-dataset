@@ -72,9 +72,7 @@ df = pd.DataFrame({
     "Bob Bit": bits_bob,
 })
 
-#with st.expander("📄Übertragungsverlauf anzeigen"):
-st.subheader("📋 Übertragungsverlauf")
-st.dataframe(df)
+
 
 
 # --- Fehleranalyse
@@ -123,28 +121,7 @@ if showDetails:
 else: 
     st.metric("🕵️‍♀️ Informationsrate", f"{eve_info_rate:.2%}")
 
-# --- Kreisdiagramm
-if eve_active:
-    cat1 = np.sum(cond_eve_correct_basis & (bob_bits_array == bits_alice))
-    cond_eve_wrong_basis = eve_measured & (basis_eve != basis_alice) & cond_alice_bob
-    cat2 = np.sum(cond_eve_wrong_basis & (bob_bits_array == bits_alice))
-    cat3 = np.sum(cond_eve_wrong_basis & (bob_bits_array != bits_alice))
-    cond_eve_none = cond_alice_bob & (~eve_measured)
-    cat4 = np.sum(cond_eve_none)
-    
-    labels = [
-        "Eve hat in gleicher Basis gemessen und unerkannt gestohlen",
-        "Eve misst in anderer Basis, Bob merkt nichts",
-        "Eve misst in anderer Basis, Bob bemerkt Fehler",
-        "Photon wurde nicht von Eve gemessen"
-    ]
-    values = [cat1, cat2, cat3, cat4]
-    colors = ["#4CAF50", "#8BC34A", "#F44336", "#2196F3"]
-    
-    fig, ax = plt.subplots()
-    ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-    ax.axis('equal')
-    st.pyplot(fig)
+
 
 # --- Sicherheit
 def binary_entropy(q):
@@ -212,9 +189,32 @@ else:
     else:
         st.warning("❌ Ein sicherer Schlüssel kann **nicht** extrahiert werden. Eve hat zu viel Information.")
 
+# --- Kreisdiagramm
+if eve_active:
+    cat1 = np.sum(cond_eve_correct_basis & (bob_bits_array == bits_alice))
+    cond_eve_wrong_basis = eve_measured & (basis_eve != basis_alice) & cond_alice_bob
+    cat2 = np.sum(cond_eve_wrong_basis & (bob_bits_array == bits_alice))
+    cat3 = np.sum(cond_eve_wrong_basis & (bob_bits_array != bits_alice))
+    cond_eve_none = cond_alice_bob & (~eve_measured)
+    cat4 = np.sum(cond_eve_none)
+    
+    labels = [
+        "Eve hat in gleicher Basis gemessen und unerkannt gestohlen",
+        "Eve misst in anderer Basis, Bob merkt nichts",
+        "Eve misst in anderer Basis, Bob bemerkt Fehler",
+        "Photon wurde nicht von Eve gemessen"
+    ]
+    values = [cat1, cat2, cat3, cat4]
+    colors = ["#4CAF50", "#8BC34A", "#F44336", "#2196F3"]
+    
+    fig, ax = plt.subplots()
+    ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
+    ax.axis('equal')
+    st.pyplot(fig)
 
 
 
-
-
+#with st.expander("📄Übertragungsverlauf anzeigen"):
+st.subheader("📋 Übertragungsverlauf")
+st.dataframe(df)
 
