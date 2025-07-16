@@ -130,7 +130,9 @@ def binary_entropy(q):
     return -q * math.log2(q) - (1 - q) * math.log2(1 - q)
 
 I_AB = 1 - binary_entropy(error_rate)
-condition1 = I_AB > eve_info_rate
+condition3 = I_AB > eve_info_rate
+condition1 = I_AB > error_rate*2
+
 condition2 = I_AB > 0.5
 
 # Sicher extrahierbare Bits wenn I(E) bekannt
@@ -185,7 +187,10 @@ else:
         st.success("✅ Ein sicherer Schlüssel kann extrahiert werden auch wenn nicht bekannt ist wie viel Information Eve hat.")
     
     elif condition1:
-        st.warning("⚠️ Ein sicherer Schlüssel kann nur extrahiert werden wenn Alice und Bob wissen wie viel Information Eve hat.")
+        st.warning("⚠️ Ein sicherer Schlüssel kann nur extrahiert werden wenn Alice und Bob Eves Information über der Übertragungsfehler abschätzen.")
+    elif condition3:
+        st.warning("⚠️ Ein sicherer Schlüssel kann nur extrahiert werden wenn Alice und Bob Eves Information kennen.")
+    
     else:
         st.warning("❌ Ein sicherer Schlüssel kann **nicht** extrahiert werden. Eve hat zu viel Information.")
 
